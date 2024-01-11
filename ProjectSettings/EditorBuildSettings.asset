@@ -6,6 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/_Project/Scenes/GameScreen.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/_Project/Scenes/JoystickScreen.unity
+    guid: 0666aa12754cf7a4fba6f2a155a15e3c
+  - enabled: 1
+    path: Assets/_Project/Scenes/PausedScreen.unity
+    guid: b0416cccad616f14abc43005f817221f
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
