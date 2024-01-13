@@ -1,10 +1,11 @@
 ﻿namespace FreePunch.Player
 {
-    public class IdleState : IPlayerState
+    public sealed class IdleState : IPlayerState
     {
         public const string AnimationTrigger = "Idle";
 
         private PlayerBase _sourcePlayer;
+        public string Name => nameof(IdleState);
 
         public IdleState(PlayerBase sourcePlayer)
         {

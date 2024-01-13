@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace FreePunch.Screen
 {
-    public class GameScreen : MonoBehaviour
+    public sealed class GameScreen : MonoBehaviour
     {
         [SerializeField] private Button _pauseButton;
         [SerializeField] private TextMeshProUGUI _pauseInfoText;

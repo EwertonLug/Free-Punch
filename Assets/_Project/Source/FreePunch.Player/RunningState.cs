@@ -4,15 +4,17 @@ using UnityEngine;
 
 namespace FreePunch.Player
 {
-    public class RunningState : IPlayerState
+    public sealed class RunningState : IPlayerState
     {
         public const string AnimationTrigger = "Running";
         private PlayerBase _playerBase;
-        private Vector3 _playerVelocity;
+       
         public RunningState(PlayerBase playerBase)
         {
             _playerBase = playerBase;
         }
+
+        public string Name => nameof(RunningState);
 
         public void EnterState()
         {
@@ -35,14 +37,6 @@ namespace FreePunch.Player
             }
 
             _playerBase.CharacterController.Move(_playerBase.Settings.MoveSpeed * Time.deltaTime * move);
-
-            if (_playerBase.CharacterController.isGrounded && _playerVelocity.y < 0)
-            {
-                _playerVelocity.y = 0f;
-            }
-
-            _playerVelocity.y += Physics.gravity.y * Time.deltaTime;
-            _playerBase.CharacterController.Move(_playerVelocity * Time.deltaTime);
 
         }
     }

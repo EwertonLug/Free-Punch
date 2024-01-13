@@ -6,42 +6,60 @@ namespace FreePunch.Player
 {
     public abstract class PlayerBase : MonoBehaviour
     {
-        private IPlayerState _currentState;
-       
+        [field: SerializeField] public PlayerBackStack BackStack { get; private set; }
+
         public abstract Animator Animator { get; }
         public abstract CharacterController CharacterController { get; }
         public abstract PlayerSettingData Settings { get; }
-        public IPlayerState CurrentState => _currentState;
+        public abstract Transform FowardBoxSensor { get; }
+        public IPlayerState CurrentState { get; private set; }
         public PlayerInput Input { get; private set; }
-        
+        public bool IsInitialized { get; private set; }
+       
+
         public void TransitionToState(IPlayerState newState)
         {
-            if (_currentState != null)
+            if (!IsInitialized)
             {
-                _currentState.ExitState();
+                return;
             }
 
-            _currentState = newState;
-            _currentState.EnterState();
+            if (CurrentState != null)
+            {
+                CurrentState.ExitState();
+            }
+
+            newState.EnterState();
+            CurrentState = newState;
         }
 
         public void Initialize(PlayerInput input)
         {
-            Input = input;
-            OnInitialized();
+            if (!IsInitialized)
+            {
+                Input = input;
+                IsInitialized = true;
+                BackStack.Setup(Settings.InitMaxSlots);
+                OnInitialized();
+            }
         }
 
         public void UpdateCurrentState()
         {
-
-            if (_currentState != null)
+            if (!IsInitialized)
             {
-                _currentState.UpdateState();
+                return;
             }
-
+            if (CurrentState != null)
+            {
+                CurrentState.UpdateState();
+            }
+            BackStack.OnUpdate();
+            OnUpdate();
         }
 
         protected abstract void OnInitialized();
+        protected abstract void OnUpdate();
 
     }
 }

@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704af6b206011d743bf6a9ba42aca07b, type: 3}
   m_Name: DefaultPlayerSettingData
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
-  StopPunchDelay: 0.8
+  <InitMaxSlots>k__BackingField: 15
+  <MoveSpeed>k__BackingField: 3
+  <StopPunchDelay>k__BackingField: 0.8
+  <NpcLayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 64
+  <PunchDamage>k__BackingField: 100

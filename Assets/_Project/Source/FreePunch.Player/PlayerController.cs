@@ -1,3 +1,4 @@
+using FreePunch.AI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,12 @@ namespace FreePunch.Player
 
         }
 
-        private void Update()
+        public void PushToBackStack(NPCBase npc)
+        {
+            _currentPlayer.BackStack.AddNpc(npc);
+        }
+
+        private void FixedUpdate()
         {
             if (_isInitialized)
             {
@@ -37,7 +43,10 @@ namespace FreePunch.Player
 
         private void HandlePunchingActionRequest(InputAction.CallbackContext ctx)
         {
-            _currentPlayer.TransitionToState(new PunchingState(_currentPlayer));
+            if (_currentPlayer.CurrentState.GetType() != typeof(PunchingState))
+            {
+                _currentPlayer.TransitionToState(new PunchingState(_currentPlayer));
+            }
         }
 
         private void HandleMoveActionCancel(InputAction.CallbackContext obj)

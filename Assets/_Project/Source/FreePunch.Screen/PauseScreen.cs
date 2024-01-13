@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace FreePunch.Screen
 {
-    public class PauseScreen : MonoBehaviour
+    public sealed class PauseScreen : MonoBehaviour
     {
         [SerializeField] private Button _continueButton;
         [SerializeField] private int _pausedScreenIndex;
