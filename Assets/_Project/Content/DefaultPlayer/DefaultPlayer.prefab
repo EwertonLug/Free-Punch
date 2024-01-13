@@ -186,6 +186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefaultPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 819e1ea1fc3376747aa615ca0114ae76,
+        type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 4738985430913344378, guid: 819e1ea1fc3376747aa615ca0114ae76,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

@@ -10,9 +10,14 @@ namespace FreePunch.AI
         private int _life = 100;
 
         public int Life => _life;
+
+        public abstract bool IsDied { get; }
+
         public abstract void Initialize();
         public abstract void Die();
+        public abstract void Wander();
         public abstract void DisabeAllPhysics();
+        public abstract void EnableRagdoll();
 
         public virtual void TakeDamage(int damageAmount)
         {

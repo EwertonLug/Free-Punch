@@ -12,7 +12,7 @@ namespace FreePunch.Player
         [SerializeField] private PlayerInput _playerInput;
 
         private PlayerBase _currentPlayer;
-
+        private Vector3 _startPosition;
         private bool _isInitialized;
 
         public void Initialize(PlayerBase currentPlayer)
@@ -22,6 +22,7 @@ namespace FreePunch.Player
                 SetupEvents();
                 _currentPlayer = currentPlayer;
                 _currentPlayer.Initialize(_playerInput);
+                _startPosition = _currentPlayer.transform.position;
                 _isInitialized = true;
             }
 
@@ -32,7 +33,14 @@ namespace FreePunch.Player
             _currentPlayer.BackStack.AddNpc(npc);
         }
 
-        private void FixedUpdate()
+        public int EmptyBackStatck()
+        {
+            int size = _currentPlayer.BackStack.Size();
+            _currentPlayer.BackStack.RemoveAllNpcs();
+
+            return size;
+        }
+        public void OnFixedUpdate()
         {
             if (_isInitialized)
             {
@@ -52,6 +60,11 @@ namespace FreePunch.Player
         private void HandleMoveActionCancel(InputAction.CallbackContext obj)
         {
             _currentPlayer.TransitionToState(new IdleState(_currentPlayer));
+        }
+
+        public void ResetPosition()
+        {
+            _currentPlayer.transform.position = _startPosition;
         }
 
         private void HandleMoveActionStart(InputAction.CallbackContext ctx)

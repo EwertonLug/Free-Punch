@@ -32,7 +32,17 @@ namespace FreePunch.AI
             npc.DisabeAllPhysics();
             return npc;
         }
-    
+
+        public void OnUpdate()
+        {
+            _activeNpcs.ForEach((npc)=> {
+                if (npc != null && !npc.IsDied)
+                {
+                    npc.Wander();
+                }
+            });
+        }
+
         private void HandleNpcTakeDamage(NPCBase npc)
         {
             if (npc.Life <= 0)
@@ -64,6 +74,26 @@ namespace FreePunch.AI
                     npc.OnTakeDamage -= HandleNpcDied;
                 }
             });
+        }
+
+        public void Generate(int levelProgressTarget)
+        {
+            _activeNpcs.ForEach((npc) => {
+                if (npc != null && npc.IsDied)
+                {
+                    Destroy(npc.gameObject);
+                }
+            });
+
+            for (int i = 0; i < levelProgressTarget; i++)
+            {
+                Vector3 randomSpawnPosition = new Vector3(UnityEngine.Random.Range(-10, 11), 5, UnityEngine.Random.Range(-10, 11));
+                NPCBase npc = Instantiate(_npcBasePrefab, randomSpawnPosition, Quaternion.identity);
+                npc.Initialize();
+                npc.OnTakeDamage += HandleNpcTakeDamage;
+                _activeNpcs.Add(npc);
+            }
+
         }
     }
 }

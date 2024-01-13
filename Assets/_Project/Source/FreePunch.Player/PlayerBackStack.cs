@@ -1,4 +1,5 @@
 using FreePunch.AI;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,6 +44,11 @@ namespace FreePunch.Player
             }
         }
 
+        public int Size()
+        {
+            return _npcsStack.Count;
+        }
+
         private void CreatePivot()
         {
             _pivot = new($"Pivot");
@@ -61,9 +67,15 @@ namespace FreePunch.Player
             _avaliableSlotIndex++;
         }
 
-        public void RemoAllNpcs()
+        public void RemoveAllNpcs()
         {
-
+            foreach (NPCBase npc in _npcsStack)
+            {
+                npc.transform.SetParent(null);
+                npc.EnableRagdoll();
+            }
+            _npcsStack.Clear();
+            _avaliableSlotIndex = 0;
         }
 
         public void OnUpdate()
