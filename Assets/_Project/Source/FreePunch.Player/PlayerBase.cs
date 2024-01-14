@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace FreePunch.Player
             {
                 Input = input;
                 IsInitialized = true;
-                BackStack.Setup(Settings.InitMaxSlots);
+                BackStack.Setup(Settings.Slots);
                 OnInitialized();
             }
         }
@@ -60,6 +61,6 @@ namespace FreePunch.Player
 
         protected abstract void OnInitialized();
         protected abstract void OnUpdate();
-
+        public abstract void UpdateBackStackSize(int levelNpcAmount);
     }
 }

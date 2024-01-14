@@ -12,7 +12,6 @@ namespace FreePunch.Player
         private PlayerBase _currentPlayer;
         private Vector3 _startPosition;
         private bool _isInitialized;
-
         public PlayerBase CurrentPlayer => _currentPlayer;
 
         public void Initialize(PlayerBase currentPlayer)
@@ -61,9 +60,12 @@ namespace FreePunch.Player
             _currentPlayer.TransitionToState(new IdleState(_currentPlayer));
         }
 
-        public void ResetPosition()
+        public void OnStartNewLevel(int levelNpcAmount)
         {
+            _currentPlayer.CharacterController.enabled = false;
             _currentPlayer.transform.position = _startPosition;
+            _currentPlayer.CharacterController.enabled = true;
+            _currentPlayer.UpdateBackStackSize(levelNpcAmount);
         }
 
         private void HandleMoveActionStart(InputAction.CallbackContext ctx)

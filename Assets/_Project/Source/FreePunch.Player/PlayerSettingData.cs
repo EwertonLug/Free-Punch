@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace FreePunch
 {
-    [CreateAssetMenu(menuName = "Player/Create Player Settings")]
+    [CreateAssetMenu(menuName = "FreePunch/Settings/Create Player Settings")]
     public class PlayerSettingData : ScriptableObject
     {
         [field: Header("Back Stack Settings")]
-        [field: SerializeField] public int InitMaxSlots { get; private set; }
+        [field: SerializeField] public int Slots { get; private set; }
         [field: Header("Running State Settings")]
         [field: SerializeField] public float MoveSpeed { get; private set; }
 

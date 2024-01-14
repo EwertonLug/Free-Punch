@@ -14,7 +14,8 @@ namespace FreePunch
         private void Start()
         {
             _levelManager.Initialize();
-            _gameScreen.Initialize();
+            _gameScreen.Initialize(_levelManager.LevelSettings, _playerData);
+            _playerData.Initialize(_levelManager.LevelSettings);
             _levelManager.OnLevelCompleted += HandleLevelCompleted;
             _levelManager.OnLevelUpdated += HandleLevelUpdated;
             _levelManager.OnLevelStarted += HandleLevelStarted;
@@ -25,8 +26,8 @@ namespace FreePunch
         private void HandleImproveRequest()
         {
             _playerData.IncreasePowerUp();
-            _playerData.DecreaseMoney(_levelManager.ImproveStackPrice);
-            _gameScreen.RefresEndLevelPanel(_playerData, _levelManager.ImproveStackPrice);
+            _playerData.DecreaseMoney();
+            _gameScreen.RefresEndLevelPanel(_playerData, _levelManager.LevelSettings.ImprovePrice);
         }
 
         private void HandleLevelStarted(LevelManager.RuntimeProgress progress)
@@ -47,7 +48,7 @@ namespace FreePunch
         private void HandleLevelCompleted()
         {
             _playerData.IncreaseMoney();
-            _gameScreen.OnLevelCompleted(_playerData, _levelManager.ImproveStackPrice);
+            _gameScreen.OnLevelCompletedAsync();
             
         }
 

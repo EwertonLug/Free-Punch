@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704af6b206011d743bf6a9ba42aca07b, type: 3}
   m_Name: DefaultPlayerSettingData
   m_EditorClassIdentifier: 
-  <InitMaxSlots>k__BackingField: 15
+  <Slots>k__BackingField: 20
   <MoveSpeed>k__BackingField: 4
   <StopPunchDelay>k__BackingField: 0.8
   <NpcLayerMask>k__BackingField:

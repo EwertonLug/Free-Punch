@@ -15,6 +15,7 @@ namespace FreePunch.Player
 
         private int _avaliableSlotIndex = 0;
         private GameObject _pivot;
+        private int _slotsToProcess;
         public void Setup(int maxSlots)
         {
             CreatePivot();
@@ -42,6 +43,11 @@ namespace FreePunch.Player
                 }
                 _slots.Add(slot.transform);
             }
+        }
+
+        public void UpdateSlotsToProcess(int levelNpcAmount)
+        {
+            _slotsToProcess = levelNpcAmount;
         }
 
         private void CreatePivot()
@@ -87,16 +93,21 @@ namespace FreePunch.Player
 
             for (int i = 0; i < _slots.Count; i++)
             {
+         
                 Transform target = _pivot.transform;
                 Transform slot = _slots[i];
 
-                if (i > 0)
+                if (i > 0 && i < _slotsToProcess)
                 {
                     target = _slots[i - 1];
+                    AdjustPosition(target, slot, _distanceBeetween);
+                    AdjustRotation(target, slot);
                 }
-
-                AdjustPosition(target, slot, _distanceBeetween);
-                AdjustRotation(target, slot);
+                else if(i == 0)
+                {
+                    AdjustPosition(target, slot, _distanceBeetween);
+                    AdjustRotation(target, slot);
+                }
 
             }
 

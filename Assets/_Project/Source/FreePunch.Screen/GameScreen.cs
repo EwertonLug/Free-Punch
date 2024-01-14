@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System;
+using FreePunch.Level;
+using System.Threading.Tasks;
 
 namespace FreePunch.Screen
 {
@@ -12,20 +14,37 @@ namespace FreePunch.Screen
         public event Action OnStartNewRequested;
 
         [SerializeField] private Button _pauseButton;
-        [SerializeField] private EndLevelPanel _endLevelPanel;
         [SerializeField] private LevelProgressPanel _levelProgress;
         [SerializeField] private int _joystickScreenIndex;
         [SerializeField] private int _pausedScreenIndex;
+        [SerializeField] private int _endLevelScreenIndex;
 
-        public void Initialize()
+        private EndLevelScreen _endLevelPanel;
+        private RuntimePlayerData _playerData;
+        private LevelData _levelSettings;
+
+        public void Initialize(LevelData levelSettings, RuntimePlayerData playerData)
         {
-            _endLevelPanel.Initialize();
+            _playerData = playerData;
+            _levelSettings = levelSettings;
             _pauseButton.onClick.AddListener(HandlePlayButtonClick);
-            _endLevelPanel.OnContinueRequested += HandleContinueRequested;
-            _endLevelPanel.OnImproveRequested += HandleImproveRequested;
             _levelProgress.gameObject.SetActive(true);
-            _levelProgress.Setup(0, 1);
+            _levelProgress.Setup(0, levelSettings.InitNpcs);
             SceneManager.LoadSceneAsync(_joystickScreenIndex, LoadSceneMode.Additive);
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if(scene.buildIndex == _endLevelScreenIndex)
+            {
+                var rootObjects = scene.GetRootGameObjects();
+                _endLevelPanel = rootObjects[0].GetComponent<EndLevelScreen>();
+                _endLevelPanel.Initialize();
+                _endLevelPanel.Setup(_playerData, _levelSettings.ImprovePrice);
+                _endLevelPanel.OnContinueRequested += HandleContinueRequested;
+                _endLevelPanel.OnImproveRequested += HandleImproveRequested;
+            }
         }
 
         private void HandleImproveRequested()
@@ -35,7 +54,9 @@ namespace FreePunch.Screen
 
         private void HandleContinueRequested()
         {
-            _endLevelPanel.gameObject.SetActive(false);
+            _endLevelPanel.OnContinueRequested -= HandleContinueRequested;
+            _endLevelPanel.OnImproveRequested -= HandleImproveRequested;
+            SceneManager.UnloadSceneAsync(_endLevelScreenIndex);
             OnStartNewRequested?.Invoke();
         }
 
@@ -58,11 +79,11 @@ namespace FreePunch.Screen
             _levelProgress.Setup(progress.LevelProgress, progress.LevelProgressTarget);
         }
 
-        public void OnLevelCompleted(RuntimePlayerData _playerMoney, int improveStackPrice)
+        public async void OnLevelCompletedAsync()
         {
-            SceneManager.UnloadSceneAsync(_joystickScreenIndex);
-            _endLevelPanel.gameObject.SetActive(true);
-            _endLevelPanel.Setup(_playerMoney, improveStackPrice);
+            await SceneManager.UnloadSceneAsync(_joystickScreenIndex);
+            await SceneManager.LoadSceneAsync(_endLevelScreenIndex, LoadSceneMode.Additive);
+
             _pauseButton.gameObject.SetActive(false);
             _levelProgress.gameObject.SetActive(false);
         }
@@ -75,8 +96,7 @@ namespace FreePunch.Screen
         private void OnDestroy()
         {
             _pauseButton.onClick.RemoveAllListeners();
-            _endLevelPanel.OnContinueRequested -= HandleContinueRequested;
-            _endLevelPanel.OnImproveRequested -= HandleImproveRequested;
+            SceneManager.sceneLoaded += HandleSceneLoaded;
         }
     }
 }

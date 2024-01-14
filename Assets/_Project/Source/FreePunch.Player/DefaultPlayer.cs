@@ -22,6 +22,12 @@ namespace FreePunch.Player
 
         public override Transform FowardBoxSensor => _forwardBoxSensor;
 
+
+        public override void UpdateBackStackSize(int levelNpcAmount)
+        {
+            BackStack.UpdateSlotsToProcess(levelNpcAmount);
+        }
+
         protected override void OnInitialized()
         {
             TransitionToState(new IdleState(this));

@@ -1,4 +1,3 @@
-using FreePunch.Player;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,23 +10,13 @@ namespace FreePunch.AI
         public event Action OnNpcDied;
 
         [SerializeField] private NPCBase _npcBasePrefab;
-        [SerializeField] private List<NPCBase> _activeNpcs;
+        private List<NPCBase> _activeNpcs = new List<NPCBase>();
+        private List<NPCBase> _discartedNpcs = new List<NPCBase>();
 
-        private List<NPCBase> _discartedNpcs;
-
-        public void Initialize()
+        public void Initialize(int numberOfNpcs)
         {
             _discartedNpcs = new List<NPCBase>();
-
-            _activeNpcs.ForEach((npc) =>
-            {
-
-                if (npc != null)
-                {
-                    npc.Initialize();
-                    npc.OnTakeDamage += HandleNpcTakeDamage;
-                }
-            });
+            Generate(numberOfNpcs);
         }
 
         public NPCBase CreateNpc()
@@ -80,8 +69,12 @@ namespace FreePunch.AI
                 }
             });
         }
+        public void OnStartNewLevel(int levelNpcAmount)
+        {
+            Generate(levelNpcAmount);
+        }
 
-        public void Generate(int levelProgressTarget)
+        private void Generate(int npcAmount)
         {
             DestroyDiscardedNpcs();
 
@@ -92,7 +85,7 @@ namespace FreePunch.AI
                 }
             });
 
-            for (int i = 0; i < levelProgressTarget; i++)
+            for (int i = 0; i < npcAmount; i++)
             {
                 Vector3 randomSpawnPosition = new Vector3(UnityEngine.Random.Range(-10, 11), 5, UnityEngine.Random.Range(-10, 11));
                 NPCBase npc = Instantiate(_npcBasePrefab, randomSpawnPosition, Quaternion.identity);

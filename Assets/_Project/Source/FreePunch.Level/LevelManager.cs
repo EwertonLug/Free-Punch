@@ -17,44 +17,44 @@ namespace FreePunch.Level
         public event Action<RuntimeProgress> OnLevelStarted;
         public event Action OnLevelCompleted;
         public event Action<RuntimeProgress> OnLevelUpdated;
-
+        [SerializeField] private LevelData _levelSettings;
         [SerializeField] private DiscardArea _discardArea;
         [SerializeField] private PlayerBase _currentPlayer;
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private NPCManager _npcManager;
-        [SerializeField] private int _improveStatckPrice;
-        [SerializeField] private int _startLevelProgressTarget = 1;
 
-        private int _levelProgress;
 
-        public int ImproveStackPrice => _improveStatckPrice;
+        private int _discardedNpcs;
+        private int _levelNpcsAmount;
+        public LevelData LevelSettings => _levelSettings;
 
         public void Initialize()
         {
             _playerController.Initialize(_currentPlayer);
-            _npcManager.Initialize();
+            _npcManager.Initialize(_levelSettings.InitNpcs);
             _npcManager.OnNpcDied += HandleNpcDied;
             _discardArea.OnPlayerInsideArea += HandlePlayerInsideDiscardArea;
+            _levelNpcsAmount = _levelSettings.InitNpcs;
         }
-        public void StartNewLevel(int stackSize)
+        public void StartNewLevel(int playerStackModifier)
         {
-            _levelProgress = 0;
-            _startLevelProgressTarget += stackSize;
+            _discardedNpcs = 0;
+            _levelNpcsAmount = Mathf.Clamp(_levelSettings.InitNpcs + playerStackModifier, 0, _levelSettings.MaxNPCs);
             var progress = new RuntimeProgress();
-            progress.LevelProgress = _levelProgress;
-            progress.LevelProgressTarget = _startLevelProgressTarget;
-            _playerController.ResetPosition();
-            _npcManager.Generate(_startLevelProgressTarget);
+            progress.LevelProgress = _discardedNpcs;
+            progress.LevelProgressTarget = _levelNpcsAmount;
+            _playerController.OnStartNewLevel(_levelNpcsAmount);
+            _npcManager.OnStartNewLevel(_levelNpcsAmount);
             OnLevelStarted?.Invoke(progress);
         }
 
         private void HandlePlayerInsideDiscardArea()
         {
             var discardedNpcs = _playerController.ClearBackStatck();
-            _levelProgress += discardedNpcs.Count;
+            _discardedNpcs += discardedNpcs.Count;
             var progress = new RuntimeProgress();
-            progress.LevelProgress = _levelProgress;
-            progress.LevelProgressTarget = _startLevelProgressTarget;
+            progress.LevelProgress = _discardedNpcs;
+            progress.LevelProgressTarget = _levelNpcsAmount;
             _npcManager.CacheDistardedNpcs(discardedNpcs);
             OnLevelUpdated?.Invoke(progress);
             CheckIfLevelCompleted();
@@ -62,7 +62,7 @@ namespace FreePunch.Level
 
         private void CheckIfLevelCompleted()
         {
-            if (_levelProgress >= _startLevelProgressTarget)
+            if (_discardedNpcs >= _levelNpcsAmount)
             {
                 LevelCompleted();
             }

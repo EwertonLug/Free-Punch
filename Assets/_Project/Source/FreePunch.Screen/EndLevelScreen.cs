@@ -2,10 +2,11 @@
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace FreePunch.Screen
 {
-    public class EndLevelPanel : MonoBehaviour
+    public class EndLevelScreen : MonoBehaviour
     {
         public event Action OnContinueRequested;
         public event Action OnImproveRequested;
@@ -21,11 +22,13 @@ namespace FreePunch.Screen
             _improveStackButton.onClick.AddListener(()=> { OnImproveRequested?.Invoke();
             });
         }
+
         public void Setup(RuntimePlayerData runtimePlayerData, int improveStackPrice)
         {
             _currentMoney.SetText(runtimePlayerData.Money.ToString());
             _improvePrice.SetText(improveStackPrice.ToString());
             _improveStackButton.interactable = runtimePlayerData.Money >= improveStackPrice;
         }
+
     }
 }
