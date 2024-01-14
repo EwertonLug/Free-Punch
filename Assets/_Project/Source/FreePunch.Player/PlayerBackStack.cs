@@ -44,11 +44,6 @@ namespace FreePunch.Player
             }
         }
 
-        public int Size()
-        {
-            return _npcsStack.Count;
-        }
-
         private void CreatePivot()
         {
             _pivot = new($"Pivot");
@@ -67,15 +62,20 @@ namespace FreePunch.Player
             _avaliableSlotIndex++;
         }
 
-        public void RemoveAllNpcs()
+        public List<NPCBase> DiscardAllNpc()
         {
+            List<NPCBase> discardedNpcs = new List<NPCBase>();
+
             foreach (NPCBase npc in _npcsStack)
             {
                 npc.transform.SetParent(null);
                 npc.EnableRagdoll();
+                discardedNpcs.Add(npc);
             }
             _npcsStack.Clear();
             _avaliableSlotIndex = 0;
+
+            return discardedNpcs;
         }
 
         public void OnUpdate()

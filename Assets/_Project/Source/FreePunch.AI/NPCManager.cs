@@ -13,8 +13,12 @@ namespace FreePunch.AI
         [SerializeField] private NPCBase _npcBasePrefab;
         [SerializeField] private List<NPCBase> _activeNpcs;
 
+        private List<NPCBase> _discartedNpcs;
+
         public void Initialize()
         {
+            _discartedNpcs = new List<NPCBase>();
+
             _activeNpcs.ForEach((npc) =>
             {
 
@@ -60,6 +64,7 @@ namespace FreePunch.AI
         private IEnumerator EnableToCollect(NPCBase npc)
         {
             yield return new WaitForSeconds(2f);
+            _activeNpcs.Remove(npc);
             Destroy(npc.gameObject);
             OnNpcDied?.Invoke();
         }
@@ -78,6 +83,8 @@ namespace FreePunch.AI
 
         public void Generate(int levelProgressTarget)
         {
+            DestroyDiscardedNpcs();
+
             _activeNpcs.ForEach((npc) => {
                 if (npc != null && npc.IsDied)
                 {
@@ -94,6 +101,17 @@ namespace FreePunch.AI
                 _activeNpcs.Add(npc);
             }
 
+        }
+
+        private void DestroyDiscardedNpcs()
+        {
+            _discartedNpcs.ForEach((npc) => Destroy(npc.gameObject));
+            _discartedNpcs.Clear();
+        }
+
+        public void CacheDistardedNpcs(List<NPCBase> discardedNpcs)
+        {
+            _discartedNpcs.AddRange(discardedNpcs);
         }
     }
 }

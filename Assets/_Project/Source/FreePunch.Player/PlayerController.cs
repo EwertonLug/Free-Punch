@@ -1,6 +1,4 @@
 using FreePunch.AI;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +12,8 @@ namespace FreePunch.Player
         private PlayerBase _currentPlayer;
         private Vector3 _startPosition;
         private bool _isInitialized;
+
+        public PlayerBase CurrentPlayer => _currentPlayer;
 
         public void Initialize(PlayerBase currentPlayer)
         {
@@ -33,13 +33,12 @@ namespace FreePunch.Player
             _currentPlayer.BackStack.AddNpc(npc);
         }
 
-        public int EmptyBackStatck()
+        public List<NPCBase> ClearBackStatck()
         {
-            int size = _currentPlayer.BackStack.Size();
-            _currentPlayer.BackStack.RemoveAllNpcs();
-
-            return size;
+            var discardedNpcs = _currentPlayer.BackStack.DiscardAllNpc();
+            return discardedNpcs;
         }
+
         public void OnFixedUpdate()
         {
             if (_isInitialized)

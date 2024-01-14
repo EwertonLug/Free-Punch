@@ -33,7 +33,6 @@ namespace FreePunch.Level
         {
             _playerController.Initialize(_currentPlayer);
             _npcManager.Initialize();
-
             _npcManager.OnNpcDied += HandleNpcDied;
             _discardArea.OnPlayerInsideArea += HandlePlayerInsideDiscardArea;
         }
@@ -51,11 +50,12 @@ namespace FreePunch.Level
 
         private void HandlePlayerInsideDiscardArea()
         {
-            int removeCount = _playerController.EmptyBackStatck();
-            _levelProgress += removeCount;
+            var discardedNpcs = _playerController.ClearBackStatck();
+            _levelProgress += discardedNpcs.Count;
             var progress = new RuntimeProgress();
             progress.LevelProgress = _levelProgress;
             progress.LevelProgressTarget = _startLevelProgressTarget;
+            _npcManager.CacheDistardedNpcs(discardedNpcs);
             OnLevelUpdated?.Invoke(progress);
             CheckIfLevelCompleted();
         }
