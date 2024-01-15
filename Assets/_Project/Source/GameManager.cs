@@ -1,4 +1,5 @@
 using FreePunch.Level;
+using FreePunch.Player;
 using FreePunch.Screen;
 using System;
 using UnityEngine;
@@ -21,6 +22,14 @@ namespace FreePunch
             _levelManager.OnLevelStarted += HandleLevelStarted;
             _gameScreen.OnStartNewRequested += HandleStartNewLevelRequest;
             _gameScreen.OnImproveRequested += HandleImproveRequest;
+            _gameScreen.OnChangeColor += HandleChangeColorRequest;
+        }
+
+        private void HandleChangeColorRequest(PlayerColorType color)
+        {
+            _playerData.ChangeColor(color);
+            _playerData.DecreaseMoney();
+            _gameScreen.RefresEndLevelPanel(_playerData, _levelManager.LevelSettings.ImprovePrice);
         }
 
         private void HandleImproveRequest()
@@ -42,7 +51,7 @@ namespace FreePunch
 
         private void HandleStartNewLevelRequest()
         {
-            _levelManager.StartNewLevel(_playerData.StackSize);
+            _levelManager.StartNewLevel(_playerData);
         }
 
         private void HandleLevelCompleted()
@@ -59,6 +68,7 @@ namespace FreePunch
             _levelManager.OnLevelStarted -= HandleLevelStarted;
             _gameScreen.OnStartNewRequested -= HandleStartNewLevelRequest;
             _gameScreen.OnImproveRequested -= HandleImproveRequest;
+            _gameScreen.OnChangeColor -= HandleChangeColorRequest;
         }
     }
 }

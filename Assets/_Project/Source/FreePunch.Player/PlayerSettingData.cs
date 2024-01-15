@@ -16,5 +16,7 @@ namespace FreePunch
         [field: SerializeField] public float StopPunchDelay { get; private set; }
         [field: SerializeField] public LayerMask NpcLayerMask { get; private set; }
         [field: SerializeField] public int PunchDamage { get; private set; }
+        [field: Header("Textures Variations")]
+        [field: SerializeField] public Texture OrangeTexture { get; private set; }
     }
 }

@@ -37,14 +37,14 @@ namespace FreePunch.Level
             _discardArea.OnPlayerInsideArea += HandlePlayerInsideDiscardArea;
             _levelNpcsAmount = _levelSettings.InitNpcs;
         }
-        public void StartNewLevel(int playerStackModifier)
+        public void StartNewLevel(RuntimePlayerData playerData)
         {
             _discardedNpcs = 0;
-            _levelNpcsAmount = Mathf.Clamp(_levelSettings.InitNpcs + playerStackModifier, 0, _levelSettings.MaxNPCs);
+            _levelNpcsAmount = Mathf.Clamp(_levelSettings.InitNpcs + playerData.StackSize, 0, _levelSettings.MaxNPCs);
             var progress = new RuntimeProgress();
             progress.LevelProgress = _discardedNpcs;
             progress.LevelProgressTarget = _levelNpcsAmount;
-            _playerController.OnStartNewLevel(_levelNpcsAmount);
+            _playerController.OnStartNewLevel(_levelNpcsAmount, playerData);
             _npcManager.OnStartNewLevel(_levelNpcsAmount);
             OnLevelStarted?.Invoke(progress);
             _isLevelCompleted = false;

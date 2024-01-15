@@ -62,5 +62,6 @@ namespace FreePunch.Player
         protected abstract void OnInitialized();
         protected abstract void OnUpdate();
         public abstract void UpdateBackStackSize(int levelNpcAmount);
+        public abstract void UpdateColor(PlayerColorType skin);
     }
 }

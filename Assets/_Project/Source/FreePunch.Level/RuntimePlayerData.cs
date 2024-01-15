@@ -1,4 +1,5 @@
 ﻿using FreePunch.Level;
+using FreePunch.Player;
 using System;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace FreePunch
         private LevelData _levelSettings;
         public int Money { get; private set; }
         public int StackSize { get; private set; }
+        public PlayerColorType Color { get; private set; } = PlayerColorType.Blue;
 
         public void IncreaseMoney()
         {
@@ -17,6 +19,11 @@ namespace FreePunch
         public void IncreasePowerUp()
         {
             StackSize++;
+        }
+
+        public void ChangeColor(PlayerColorType newColor)
+        {
+            Color = newColor;
         }
 
         public void DecreaseMoney()

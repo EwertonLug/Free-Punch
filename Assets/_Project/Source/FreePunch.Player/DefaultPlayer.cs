@@ -28,6 +28,23 @@ namespace FreePunch.Player
             BackStack.UpdateSlotsToProcess(levelNpcAmount);
         }
 
+        public override void UpdateColor(PlayerColorType colorType)
+        {
+            switch (colorType)
+            {
+                case PlayerColorType.Orange:
+                    foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
+                    {
+                        renderer.material.mainTexture = _settings.OrangeTexture;
+                    }
+                    Debug.Log("Change Color");
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+
         protected override void OnInitialized()
         {
             TransitionToState(new IdleState(this));

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System;
 using FreePunch.Level;
 using System.Threading.Tasks;
+using FreePunch.Player;
 
 namespace FreePunch.Screen
 {
@@ -12,6 +13,7 @@ namespace FreePunch.Screen
     {
         public event Action OnImproveRequested;
         public event Action OnStartNewRequested;
+        public event Action<PlayerColorType> OnChangeColor;
 
         [SerializeField] private Button _pauseButton;
         [SerializeField] private LevelProgressPanel _levelProgress;
@@ -22,6 +24,8 @@ namespace FreePunch.Screen
         private EndLevelScreen _endLevelPanel;
         private RuntimePlayerData _playerData;
         private LevelData _levelSettings;
+
+        
 
         public void Initialize(LevelData levelSettings, RuntimePlayerData playerData)
         {
@@ -44,7 +48,13 @@ namespace FreePunch.Screen
                 _endLevelPanel.Setup(_playerData, _levelSettings.ImprovePrice);
                 _endLevelPanel.OnContinueRequested += HandleContinueRequested;
                 _endLevelPanel.OnImproveRequested += HandleImproveRequested;
+                _endLevelPanel.OnChangeColorRequested += HandleChangeColorRequested;
             }
+        }
+
+        private void HandleChangeColorRequested(PlayerColorType newColor)
+        {
+            OnChangeColor?.Invoke(newColor);
         }
 
         private void HandleImproveRequested()
@@ -56,6 +66,7 @@ namespace FreePunch.Screen
         {
             _endLevelPanel.OnContinueRequested -= HandleContinueRequested;
             _endLevelPanel.OnImproveRequested -= HandleImproveRequested;
+            _endLevelPanel.OnChangeColorRequested -= HandleChangeColorRequested;
             SceneManager.UnloadSceneAsync(_endLevelScreenIndex);
             OnStartNewRequested?.Invoke();
         }
@@ -68,9 +79,9 @@ namespace FreePunch.Screen
             SceneManager.LoadSceneAsync(_joystickScreenIndex, LoadSceneMode.Additive);
         }
 
-        public void RefresEndLevelPanel(RuntimePlayerData _playerMoney, int improveStackPrice)
+        public void RefresEndLevelPanel(RuntimePlayerData _playerData, int improveStackPrice)
         {
-            _endLevelPanel.Setup(_playerMoney, improveStackPrice);
+            _endLevelPanel.Setup(_playerData, improveStackPrice);
         }
 
         public void OnLevelProgressUpdated(Level.LevelManager.RuntimeProgress progress)

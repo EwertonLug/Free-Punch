@@ -60,12 +60,13 @@ namespace FreePunch.Player
             _currentPlayer.TransitionToState(new IdleState(_currentPlayer));
         }
 
-        public void OnStartNewLevel(int levelNpcAmount)
+        public void OnStartNewLevel(int levelNpcAmount, RuntimePlayerData playerData)
         {
             _currentPlayer.CharacterController.enabled = false;
             _currentPlayer.transform.position = _startPosition;
             _currentPlayer.CharacterController.enabled = true;
             _currentPlayer.UpdateBackStackSize(levelNpcAmount);
+            _currentPlayer.UpdateColor(playerData.Color);
         }
 
         private void HandleMoveActionStart(InputAction.CallbackContext ctx)
